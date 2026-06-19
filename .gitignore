@@ -5,3 +5,4 @@ backend/data/*.db
 backend/.env
 *.pyc
 .DS_Store
+*.log

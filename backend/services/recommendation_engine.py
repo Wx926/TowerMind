@@ -21,6 +21,8 @@ def generate_recommendations():
     since = datetime.utcnow() - timedelta(days=7)
     recs = []
 
+    Recommendation.query.filter(Recommendation.implemented.is_(False)).delete()
+
     open_anomalies = Anomaly.query.filter(Anomaly.status != "resolved").all()
     energy_anomalies = [a for a in open_anomalies if a.anomaly_type in ("energy_spike", "overnight_usage", "equipment_failure")]
     water_anomalies = [a for a in open_anomalies if a.anomaly_type == "water_leak"]
