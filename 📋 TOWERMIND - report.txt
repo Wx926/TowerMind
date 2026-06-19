@@ -1,0 +1,941 @@
+📋 TOWERMIND - Complete Project Specification for Claude AI
+EXECUTIVE SUMMARY
+Project: TowerMind - AI-Powered Smart Resource Management System
+
+Track: Track 3 - DOUBLEDOT (Smarter Resource Management)
+
+Goal: Build an enterprise-grade web application that helps office buildings monitor, predict, and optimize resource usage (electricity, water, space, manpower) using AI.
+
+Tagline: "Every kilowatt, every drop of water, used where it matters most"
+
+CONFIRMED TECH STACK
+Category	Technology	Version
+Frontend	Pure HTML + CSS + JavaScript	Latest
+UI Framework	Pure CSS (No framework)	N/A
+Backend	Python Flask	2.3.x
+Database	SQLite	3.x
+Charts	ECharts	5.x
+AI API	Google Gemini API	gemini-1.5-flash
+Deployment	Local development	N/A
+Color Theme	Blue + Navy (Corporate)	See palette below
+SYSTEM ARCHITECTURE
+text
+┌─────────────────────────────────────────────────────────────────┐
+│                    FRONTEND (HTML/CSS/JS)                       │
+│                                                                  │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐  │
+│  │Dashboard│ │   KPI   │ │Forecast │ │Anomalies│ │Scheduler│  │
+│  └─────────┘ └─────────┘ └─────────┘ └─────────┘ └─────────┘  │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │              AI Simulator (Gemini API)                     ││
+│  └─────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────┘
+                              │ HTTP REST API
+┌─────────────────────────────────────────────────────────────────┐
+│                    BACKEND (Python Flask)                       │
+│                                                                  │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐  │
+│  │Resources│ │   KPI   │ │Forecast │ │Anomalies│ │Simulator│  │
+│  └─────────┘ └─────────┘ └─────────┘ └─────────┘ └─────────┘  │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │              Gemini API Client Service                     ││
+│  └─────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────────┐
+│                    DATABASE (SQLite)                            │
+│                                                                  │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐  │
+│  │Resources│ │Bookings │ │Anomalies│ │Recommend│ │KPI_Hist │  │
+│  └─────────┘ └─────────┘ └─────────┘ └─────────┘ └─────────┘  │
+│  ┌─────────┐                                                    │
+│  │SimLogs  │  (For tracking AI queries)                        │
+│  └─────────┘                                                    │
+└─────────────────────────────────────────────────────────────────┘
+COLOR PALETTE
+Color Name	Hex Code	Usage
+Primary Blue	#1A365D	Headers, Primary buttons, Navigation
+Secondary Blue	#2B6CB0	Cards, Secondary buttons
+Accent Blue	#4299E1	Highlights, Hover states, Links
+Light Blue	#EBF8FF	Backgrounds, Card backgrounds
+Dark Navy	#0D1A3A	Text, Footer
+Success Green	#38A169	Positive metrics, Savings indicators
+Warning Yellow	#D69E2E	Warnings, Medium severity
+Danger Red	#E53E3E	Critical alerts, High severity
+White	#FFFFFF	Body background
+Light Gray	#F7FAFC	Section backgrounds
+Border Gray	#E2E8F0	Borders, Dividers
+FEATURE SPECIFICATIONS
+FEATURE 1: UNIFIED RESOURCE MONITORING DASHBOARD
+Purpose: Visual anchor of the application. Central hub for all building telemetry.
+
+What to Build:
+
+1.1 KPI Cards (Top Section)
+Create 5 metric cards displaying:
+
+Card	Metric	Display Format	Example
+⚡	Energy	Current kWh + Trend	"12,450 kWh ▲ +8%"
+💧	Water	Current Liters + Trend	"8,230 L ▼ -2%"
+👥	Occupancy	Percentage + Trend	"73% ▲ +5%"
+🌍	Carbon	Tons CO₂ + Trend	"2.8 tCO₂ ▲ +12%"
+💰	Cost	RM + Trend	"RM 18,230 ▲ +6%"
+UI Requirement: Cards should have icon, value, and trend indicator. Green for positive (↓), Red for negative (↑).
+
+1.2 Energy Consumption Trend Chart
+Type: ECharts Line Chart
+
+Data: Last 7 days
+
+X-axis: Days (Mon-Sun)
+
+Y-axis: kWh
+
+Features: Tooltip on hover, gradient fill below line
+
+1.3 Usage by Floor Chart
+Type: ECharts Bar Chart
+
+Data: 8 floors (Floor 1-8)
+
+X-axis: Floor names
+
+Y-axis: kWh
+
+Colors: Gradient from light blue to dark blue based on consumption
+
+1.4 Room Utilization Chart
+Type: ECharts Pie Chart
+
+Data: 20 rooms across all floors
+
+Slices: Occupied vs Available
+
+Features: Percentage labels on hover
+
+1.5 Recent Anomalies Section
+Display: 3 most recent anomalies
+
+Format: Alert card with severity color, message, timestamp
+
+Action: "View All" link to Anomaly page
+
+FEATURE 2: SUSTAINABILITY KPI & EXECUTIVE DASHBOARD
+Purpose: High-level view for C-suite executives and sustainability officers.
+
+What to Build:
+
+2.1 TowerMind Efficiency Score (Hero Metric)
+Display: Large number (0-100) with gauge visualization
+
+Components: Three sub-scores
+
+Energy Efficiency (0-100)
+
+Carbon Impact (0-100)
+
+Resource Optimization (0-100)
+
+Formula: Average of three sub-scores
+
+2.2 Department Leaderboard
+Display: Ranked list of floors
+
+Columns: Rank, Floor Name, Score, Trend
+
+Format:
+
+🥇 Floor 8 ████████████████████ 92/100 ↓ 5.2% CO₂
+
+🥈 Floor 3 ██████████████████ 85/100 ↓ 3.8% CO₂
+
+🥉 Floor 5 █████████████████ 82/100 ↓ 2.1% CO₂
+
+2.3 Monthly KPI Trends Chart
+Type: ECharts Multi-line chart
+
+Data: Last 6 months
+
+Lines: Efficiency Score, Carbon Footprint, Monthly Savings
+
+Features: Dual Y-axis (Score + Tonnes/RM)
+
+2.4 Sustainability Radar Chart
+Type: ECharts Radar Chart
+
+Dimensions (5):
+
+Energy Efficiency
+Water Conservation
+Waste Management
+Carbon Reduction
+Resource Optimization
+Scale: 0-100
+
+FEATURE 3: AI PREDICTIVE FORECASTING
+Purpose: Move from reactive to proactive planning.
+
+What to Build:
+
+3.1 Financial Forecast Section
+Display:
+
+Next month projected cost (RM)
+
+Month-over-month change (%)
+
+Quarter-to-date spending
+
+Budget vs actual indicator
+
+Example Output:
+
+text
+💰 Next Month Projected: RM 38,450
+📈 Month-over-Month: ▲ +12% increase
+📊 Quarter-to-Date: RM 108,230 (RM 2,850 over budget)
+⚠️ Budget Risk: Potential overrun by Week 3
+3.2 AI Driver Analysis
+Display: List of factors driving the forecast
+
+Format:
+
+text
+🔍 Primary Drivers:
+• 📈 Higher planned occupancy (+8% YoY)
+• 🌡️ Sustained heatwave affecting HVAC loads (+15%)
+• 🏢 New wing opening (+3 floors operational)
+
+Confidence Score: 87%
+3.3 30-Day Forecast Trend Chart
+Type: ECharts Area Chart with confidence bands
+
+X-axis: Next 30 days
+
+Y-axis: Estimated daily usage
+
+Features: Shaded confidence interval (70-90%)
+
+3.4 Budget Risk Warnings
+Trigger: When forecast exceeds budget by 5%
+
+Display: Warning card at top of page
+
+Action: "Adjust Parameters" link
+
+FEATURE 4: SMART ROOT-CAUSE ANOMALY DETECTION
+Purpose: Automated surveillance to catch operational failures instantly.
+
+What to Build:
+
+4.1 Alert Summary Bar
+Display: Three counters
+
+🔴 Critical: X
+
+🟡 Medium: X
+
+🟢 Resolved: X
+
+4.2 Anomaly Cards (List View)
+Each anomaly card displays:
+
+Example Card:
+
+text
+┌─────────────────────────────────────────────────────────────────┐
+│  ⚠️ CRITICAL: Floor 18 - Room B-302                           │
+│  Drew 300% more energy at 2:17 AM                            │
+│  Normal: 3.2 kWh  │  Actual: 12.8 kWh                        │
+│                                                               │
+│  🔍 Automated Diagnostics:                                   │
+│  • HVAC chiller left un-isolated post-occupancy             │
+│  • Zonal lighting left active                               │
+│  • Possible equipment malfunction                           │
+│                                                               │
+│  [🔴 Acknowledge]  [📋 Assign]  [✅ Mark Resolved]          │
+└─────────────────────────────────────────────────────────────────┘
+4.3 Anomaly Types to Detect
+Type	Detection Logic	Example
+Energy Spike	Value > Mean + 3*StdDev	300% increase at 2 AM
+Water Leak	Continuous high flow	450% above baseline
+Overnight Usage	High usage 11PM-6AM	80% of daytime load
+Equipment Failure	Irregular pattern	Fluctuating power draw
+4.4 Filtering & Sorting
+Filter by: Severity (All/Critical/Medium/Low)
+
+Filter by: Status (All/Pending/Resolved)
+
+Sort by: Newest first
+
+FEATURE 5: STRATEGIC RECOMMENDATION ENGINE
+Purpose: Convert data into measurable ROI.
+
+What to Build:
+
+5.1 Total Potential Savings Counter
+Display: Large number at top
+
+Format: "Total Potential Savings: RM 24,800/month"
+
+5.2 Recommendation Cards
+Each card displays:
+
+Example Card:
+
+text
+┌─────────────────────────────────────────────────────────────────┐
+│  💰 HIGH IMPACT: Reduce HVAC runtime by 1 hour                │
+│                                                               │
+│  Concrete Action:                                            │
+│  "Set HVAC to shut down 1 hour earlier after office hours"  │
+│                                                               │
+│  Estimated Savings: RM 2,800/month                          │
+│  Confidence Score: 92%                                      │
+│  Carbon Impact: 450kg CO₂ (🌳 22 mature trees)            │
+│                                                               │
+│  [✅ Implement]  [⏰ Snooze]  [❌ Dismiss]                  │
+└─────────────────────────────────────────────────────────────────┘
+5.3 Recommendation Categories
+Category	Icon	Example
+Electricity	⚡	HVAC optimization
+Water	💧	Leak repairs
+Space	🏢	Consolidate floors
+Manpower	👷	Reduce janitorial hours
+Materials	🧹	Reduce cleaning supplies
+5.4 Carbon Equivalents (Humanize the impact)
+Translate CO₂ savings into relatable terms:
+
+CO₂ Saved	Equivalent
+500 kg	🌳 25 mature trees
+1,000 kg	🚗 1 car off the road for a year
+2,000 kg	☀️ Solar panels on 1 roof
+100 kg	📱 1 smartphone charged for 10 years
+FEATURE 6: CROSS-RESOURCE AI SCHEDULER
+Purpose: Optimize space, manpower, and materials together.
+
+What to Build:
+
+6.1 Space Consolidation Recommendations
+Logic: Detect low-occupancy periods and suggest merging.
+
+Example Output:
+
+text
+🏢 Space Consolidation Recommendation
+
+Low Occupancy Detected: Friday afternoons
+Floors 9, 10, 11: Under 40% utilization
+
+✅ Recommendation: Consolidate to Floors 9 & 10
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Primary Savings: RM 2,100 (electricity + cooling)
+Secondary Savings:
+  • 👷 Janitorial hours: -12 hours/week (RM 480)
+  • 🧹 Cleaning supplies: -30% (RM 120)
+  • 🔒 Security patrols: -2 rounds (RM 200)
+
+Total Impact: RM 2,900/month
+6.2 Resource Domino Effect Calculator
+Purpose: Show secondary savings beyond electricity.
+
+Formula:
+
+text
+Total Savings = Primary (Energy) + Secondary (Manpower + Materials + Security)
+6.3 Logistics Optimization
+Transportation: Consolidate delivery windows
+
+Materials: Bulk ordering recommendations
+
+Manpower: Shift scheduling optimization
+
+FEATURE 7: AI SUSTAINABILITY ADVISOR & DIGITAL TWIN SIMULATOR ⭐
+Purpose: The "Wow" feature - shifts from dashboard to decision-support platform.
+
+What to Build:
+
+7.1 Natural Language Input
+Component: Search bar/textarea
+
+Placeholder: "How can we safely cut our utility expenses by 15% next month?"
+
+Button: 🔍 Simulate
+
+7.2 Multi-Scenario Generation (Gemini API)
+Input: User query
+Processing: Send to Gemini API with building data context
+Output: 3 scenarios displayed side-by-side
+
+Example Output:
+
+text
+┌─────────────────────────────────────────────────────────────────┐
+│  📊 Scenario Comparison                                       │
+│                                                                  │
+│  ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐ │
+│  │ 🌡️ Scenario A   │ │ 🏢 Scenario B   │ │ ⭐ Scenario C   │ │
+│  │ Climate Shift   │ │ Space Rational. │ │ Hybrid          │ │
+│  │──────────────────│ │──────────────────│ │──────────────────│ │
+│  │ AC Temp +2°C    │ │ Close low-use   │ │ Combine A+B     │ │
+│  │                  │ │ zones at 6 PM   │ │                  │ │
+│  │ 💰 RM 3,200     │ │ 💰 RM 4,700     │ │ 💰 RM 7,500     │ │
+│  │ 🌍 -8% CO₂     │ │ 🌍 -12% CO₂    │ │ 🌍 -18% CO₂    │ │
+│  │ ✅ Low effort   │ │ ⚠️ Medium effort│ │ ⭐ 92% recom   │ │
+│  │ ⚠️ 65% comfort  │ │ ⚠️ 80% comfort  │ │ ⚠️ 72% comfort  │ │
+│  │ 📅 2 days       │ │ 📅 7 days       │ │ 📅 3-5 days     │ │
+│  └──────────────────┘ └──────────────────┘ └──────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+7.3 Risk Assessment Section
+Purpose: Score each scenario by operational friction.
+
+Example Output:
+
+text
+📋 Risk Assessment
+
+Scenario A: Low operational friction
+• Minor occupant comfort complaints possible
+• Easy to implement within 2 days
+• No additional budget required
+
+Scenario B: Medium operational friction
+• Requires staff communication and coordination
+• Implementation: 1 week
+• Minimal budget required
+
+Scenario C: Balanced approach (Recommended)
+• Best ROI/effort ratio
+• Implementation: 3-5 days
+• Moderate communication required
+7.4 Action Buttons
+📊 Export Report (PDF/CSV)
+
+🔄 Re-simulate
+
+✅ Implement Scenario (visual selection)
+
+7.5 Gemini API Integration Details
+API Key: User must provide GEMINI_API_KEY in .env file
+
+Prompt Template:
+
+text
+You are TowerMind AI, a building resource optimization expert.
+
+Building Data Context:
+- Total monthly energy cost: RM {total_cost}
+- Average occupancy: {occupancy}%
+- Current energy usage: {current_usage} kWh
+- Current carbon footprint: {carbon_footprint} tons CO₂
+- Number of floors: {floors}
+- Peak hours: {peak_hours}
+
+User Query: "{user_query}"
+
+Generate 3 optimization scenarios. For each scenario, provide:
+1. Scenario name (short, descriptive)
+2. Action description (specific, actionable steps)
+3. Estimated savings in RM
+4. Carbon reduction percentage
+5. Effort level (Low/Medium/High)
+6. Comfort score (0-100)
+7. Implementation timeline (days)
+8. Primary risk factor
+
+Format your response as JSON only:
+{
+    "scenario_a": {
+        "name": "Climate Shift",
+        "description": "Increase AC temperature setpoint by 2°C across all floors",
+        "savings": 3200,
+        "carbon_reduction": 8,
+        "effort": "Low",
+        "comfort_score": 65,
+        "timeline": "2 days",
+        "risk": "Occupant comfort complaints"
+    },
+    "scenario_b": {...},
+    "scenario_c": {...},
+    "recommended": "scenario_c",
+    "analysis": "Brief explanation of why scenario C is recommended"
+}
+Error Handling: If Gemini API fails, fallback to rule-based engine.
+
+DATABASE SCHEMA
+Table: resources
+sql
+CREATE TABLE resources (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    floor VARCHAR(20) NOT NULL,
+    room VARCHAR(50),
+    resource_type VARCHAR(20) NOT NULL,  -- 'electricity', 'water'
+    value DECIMAL(10, 2) NOT NULL,
+    cost DECIMAL(10, 2),
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes for performance
+CREATE INDEX idx_resources_floor ON resources(floor);
+CREATE INDEX idx_resources_timestamp ON resources(timestamp);
+CREATE INDEX idx_resources_type ON resources(resource_type);
+Table: bookings
+sql
+CREATE TABLE bookings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    floor VARCHAR(20) NOT NULL,
+    room_name VARCHAR(50) NOT NULL,
+    booked_by VARCHAR(50) NOT NULL,
+    start_time DATETIME NOT NULL,
+    end_time DATETIME NOT NULL,
+    status VARCHAR(20) DEFAULT 'booked',  -- 'booked', 'cancelled', 'completed'
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_bookings_room ON bookings(room_name);
+CREATE INDEX idx_bookings_time ON bookings(start_time, end_time);
+Table: anomalies
+sql
+CREATE TABLE anomalies (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    floor VARCHAR(20) NOT NULL,
+    room VARCHAR(50),
+    anomaly_type VARCHAR(30) NOT NULL,  -- 'energy_spike', 'water_leak', 'overnight_usage', 'equipment_failure'
+    message TEXT NOT NULL,
+    severity VARCHAR(20) NOT NULL,  -- 'critical', 'high', 'medium', 'low'
+    status VARCHAR(20) DEFAULT 'pending',  -- 'pending', 'acknowledged', 'resolved'
+    diagnostics TEXT,  -- JSON string of possible causes
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    resolved_at DATETIME
+);
+
+CREATE INDEX idx_anomalies_severity ON anomalies(severity);
+CREATE INDEX idx_anomalies_status ON anomalies(status);
+Table: recommendations
+sql
+CREATE TABLE recommendations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    category VARCHAR(20) NOT NULL,  -- 'electricity', 'water', 'space', 'manpower', 'materials'
+    estimated_savings DECIMAL(10, 2),
+    confidence_score DECIMAL(5, 2),  -- 0-100
+    carbon_impact DECIMAL(10, 2),  -- kg CO₂
+    carbon_equivalent VARCHAR(100),  -- e.g., "22 mature trees"
+    implemented BOOLEAN DEFAULT FALSE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    implemented_at DATETIME
+);
+
+CREATE INDEX idx_recommendations_category ON recommendations(category);
+CREATE INDEX idx_recommendations_implemented ON recommendations(implemented);
+Table: kpi_history
+sql
+CREATE TABLE kpi_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    month DATE NOT NULL,
+    efficiency_score INTEGER NOT NULL,  -- 0-100
+    energy_score INTEGER,  -- 0-100
+    carbon_score INTEGER,  -- 0-100
+    resource_score INTEGER,  -- 0-100
+    carbon_footprint DECIMAL(10, 2),  -- tons CO₂
+    total_savings DECIMAL(10, 2),  -- RM
+    cost_reduction DECIMAL(5, 2),  -- percentage
+    UNIQUE(month)
+);
+
+CREATE INDEX idx_kpi_month ON kpi_history(month);
+Table: simulation_logs
+sql
+CREATE TABLE simulation_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_query TEXT NOT NULL,
+    scenario_a JSON,
+    scenario_b JSON,
+    scenario_c JSON,
+    recommended_scenario VARCHAR(10),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+API ENDPOINTS
+Resources API
+text
+GET /api/resources
+  Query params: floor, resource_type, start_date, end_date
+  Response: Array of resource objects
+
+GET /api/resources/summary
+  Response: Current totals by type
+
+GET /api/resources/trend
+  Query params: days (default 7), resource_type
+  Response: Aggregated trend data
+Bookings API
+text
+GET /api/bookings
+  Query params: start_date, end_date
+  Response: Array of bookings
+
+POST /api/bookings
+  Body: { floor, room_name, booked_by, start_time, end_time }
+  Response: Created booking object
+
+PUT /api/bookings/{id}/status
+  Body: { status: 'cancelled' or 'completed' }
+  Response: Updated booking
+Anomalies API
+text
+GET /api/anomalies
+  Query params: severity, status, limit
+  Response: Array of anomalies
+
+PUT /api/anomalies/{id}/status
+  Body: { status: 'acknowledged' or 'resolved' }
+  Response: Updated anomaly
+
+GET /api/anomalies/detect
+  Response: Runs detection algorithm and returns new anomalies
+Recommendations API
+text
+GET /api/recommendations
+  Query params: category, implemented
+  Response: Array of recommendations
+
+PUT /api/recommendations/{id}/implement
+  Response: Updates implemented status
+
+POST /api/recommendations/generate
+  Response: Runs engine and creates new recommendations
+KPI API
+text
+GET /api/kpi/current
+  Response: Current month KPI
+
+GET /api/kpi/history
+  Query params: months (default 6)
+  Response: Array of monthly KPI data
+
+GET /api/kpi/leaderboard
+  Response: Floors ranked by efficiency
+Forecast API
+text
+GET /api/forecast/next-month
+  Response: { projected_cost, growth_percentage, drivers, confidence }
+
+GET /api/forecast/trend
+  Query params: days (default 30)
+  Response: Daily forecast data
+Simulation API
+text
+POST /api/simulation/generate
+  Body: { query: "How to reduce energy by 15%" }
+  Response: { scenario_a, scenario_b, scenario_c, recommended, analysis }
+
+POST /api/simulation/fallback
+  Body: { query: "..." }
+  Response: Rule-based scenarios (fallback)
+PROJECT FILE STRUCTURE
+text
+TowerMind/
+├── backend/
+│   ├── app.py
+│   ├── config.py
+│   ├── models.py
+│   ├── requirements.txt
+│   ├── .env
+│   │
+│   ├── routes/
+│   │   ├── __init__.py
+│   │   ├── resources.py
+│   │   ├── bookings.py
+│   │   ├── anomalies.py
+│   │   ├── recommendations.py
+│   │   ├── kpi.py
+│   │   ├── forecast.py
+│   │   └── simulation.py
+│   │
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── forecasting.py
+│   │   ├── anomaly_detector.py
+│   │   ├── recommendation_engine.py
+│   │   ├── scheduler_engine.py
+│   │   ├── simulation_engine.py
+│   │   └── gemini_service.py
+│   │
+│   └── data/
+│       ├── __init__.py
+│       ├── init_db.py
+│       └── mock_data_generator.py
+│
+├── frontend/
+│   ├── index.html
+│   │
+│   ├── css/
+│   │   ├── style.css
+│   │   ├── components.css
+│   │   └── charts.css
+│   │
+│   ├── js/
+│   │   ├── app.js
+│   │   ├── api.js
+│   │   ├── charts.js
+│   │   ├── pages/
+│   │   │   ├── dashboard.js
+│   │   │   ├── kpi.js
+│   │   │   ├── forecast.js
+│   │   │   ├── anomalies.js
+│   │   │   ├── recommendations.js
+│   │   │   ├── scheduler.js
+│   │   │   └── simulator.js
+│   │   └── components/
+│   │       ├── kpi_card.js
+│   │       ├── anomaly_card.js
+│   │       ├── recommendation_card.js
+│   │       ├── scenario_card.js
+│   │       └── navigation.js
+│   │
+│   └── assets/
+│       ├── logo.svg
+│       └── icons/
+│
+├── docker-compose.yml (optional)
+├── .gitignore
+├── README.md
+└── SETUP.md
+MOCK DATA REQUIREMENTS
+1. Resource Data (30 Days)
+8 floors (Floor 1 - Floor 8)
+
+Hourly records for 30 days
+
+Electricity: 0.5 - 50 kWh per hour (varies by time of day)
+
+Water: 0.1 - 10 m³ per hour
+
+Patterns: Higher during business hours (9 AM - 6 PM)
+
+2. Booking Data (7 Days)
+20 rooms across all floors
+
+5-10 bookings per day
+
+Statuses: booked (60%), completed (30%), cancelled (10%)
+
+3. Anomalies (5-8 Records)
+2 Critical (energy spike at 2 AM, water leak)
+
+3 Medium (overnight usage, equipment fluctuation)
+
+3 Low (minor spikes, brief outliers)
+
+4. Recommendations (6-8 Records)
+Electricity: 3 recommendations
+
+Water: 2 recommendations
+
+Space: 2 recommendations
+
+Manpower: 1 recommendation
+
+5. KPI History (6 Months)
+Monthly summary data with scores and metrics
+
+UI COMPONENT SPECIFICATIONS
+Navigation
+Style: Sidebar navigation (left side) or Top bar
+
+Items: Dashboard, KPI, Forecast, Anomalies, Recommendations, Scheduler, Simulator
+
+Active state: Highlighted with blue background
+
+Cards
+Style: White background, border-radius: 12px, box-shadow
+
+Padding: 20px
+
+Hover: Slight shadow elevation
+
+Buttons
+Primary: Blue background (#2B6CB0), white text, border-radius: 8px
+
+Secondary: White background, blue border, blue text
+
+Danger: Red background (#E53E3E), white text
+
+Success: Green background (#38A169), white text
+
+Badges
+Critical: Red background, white text
+
+High: Orange background, white text
+
+Medium: Yellow background, dark text
+
+Low: Green background, white text
+
+Charts (ECharts)
+Colors: Use color palette above
+
+Responsive: Auto-resize on window resize
+
+Tooltips: Show detailed data on hover
+
+Forms
+Inputs: Rounded borders, padding: 10px, border-color: #E2E8F0
+
+Labels: Above inputs, font-weight: 600, color: #1A365D
+
+ENVIRONMENT VARIABLES (.env)
+text
+# Backend
+FLASK_APP=app.py
+FLASK_ENV=development
+FLASK_PORT=5000
+
+# Database
+DATABASE_URL=sqlite:///tower_mind.db
+
+# Gemini API
+GEMINI_API_KEY=your-gemini-api-key-here
+GEMINI_MODEL=gemini-1.5-flash
+
+# CORS
+CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+SETUP INSTRUCTIONS (README.md)
+markdown
+# TowerMind - Smart Resource Management System
+
+## Prerequisites
+- Python 3.8+
+- Node.js 16+ (for frontend development)
+- Gemini API Key (Google AI Studio)
+
+## Installation
+
+### 1. Clone Repository
+```bash
+git clone https://github.com/yourusername/TowerMind.git
+cd TowerMind
+2. Backend Setup
+bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+3. Configure Environment
+bash
+cp .env.example .env
+# Edit .env and add your GEMINI_API_KEY
+4. Initialize Database
+bash
+python data/init_db.py
+5. Start Backend
+bash
+python app.py
+# Server runs at http://localhost:5000
+6. Frontend Setup
+bash
+cd ../frontend
+# No build step - just open index.html in browser
+# Or use Live Server extension in VS Code
+7. Access Application
+Open frontend/index.html in your browser
+
+API will connect to http://localhost:5000
+
+Default Demo Data
+8 floors, 20 rooms
+
+30 days of resource data
+
+Pre-populated anomalies and recommendations
+
+API Documentation
+API endpoints available at http://localhost:5000/api/
+
+text
+
+---
+
+## REQUIREMENTS.TXT
+Flask==2.3.2
+Flask-CORS==4.0.0
+Flask-SQLAlchemy==3.1.1
+SQLAlchemy==2.0.19
+python-dotenv==1.0.0
+google-generativeai==0.3.0
+requests==2.31.0
+
+text
+
+---
+
+## COMPLETION CHECKLIST
+
+### Phase 1: Backend Core
+- [ ] Flask app setup with CORS
+- [ ] SQLite database models
+- [ ] Mock data generation
+- [ ] API routes for all features
+
+### Phase 2: Frontend Core
+- [ ] HTML structure with navigation
+- [ ] CSS styling with color palette
+- [ ] JavaScript API client
+- [ ] ECharts integration
+
+### Phase 3: Features 1-6
+- [ ] Dashboard page (KPI cards + charts)
+- [ ] KPI Executive page (Score + Leaderboard)
+- [ ] Forecast page (Predictions + Drivers)
+- [ ] Anomalies page (List + Diagnostics)
+- [ ] Recommendations page (Cards + Actions)
+- [ ] Scheduler page (Consolidation + Domino effect)
+
+### Phase 4: Feature 7 (Wow)
+- [ ] Simulator UI with input box
+- [ ] Gemini API integration
+- [ ] Multi-scenario display
+- [ ] Risk assessment
+- [ ] Fallback mechanism
+
+### Phase 5: Polish
+- [ ] Responsive design
+- [ ] Loading states
+- [ ] Error handling
+- [ ] README documentation
+- [ ] Presentation preparation
+
+---
+
+## PRESENTATION TIPS
+
+### What to Highlight:
+1. **The Problem:** Buildings waste 30% of energy due to inefficiency
+2. **The Solution:** AI that monitors, predicts, and recommends actions
+3. **The Tech:** Clean architecture, modern stack, Gemini AI integration
+4. **The Impact:** Show real savings (RM 7,500+/month)
+5. **The Differentiation:** Natural language simulator (Feature 7)
+
+### Demo Flow:
+1. Open Dashboard → Show real-time metrics
+2. Go to KPI → Show Efficiency Score & Leaderboard
+3. Go to Forecast → Show AI predictions
+4. Go to Anomalies → Show automated detection
+5. Go to Recommendations → Show actionable insights
+6. **Go to Simulator → Type "How to reduce energy by 15%" → Show 3 scenarios**
+7. **Explain: "This is our AI Sustainability Advisor powered by Gemini"**
+
+### Key Questions to Anticipate:
+- "Where does the data come from?" → Mock data, designed for real sensors
+- "How does the AI work?" → Gemini API with building data context
+- "Is it real-time?" → Simulated real-time with periodic updates
+- "Can it scale?" → Yes, designed for enterprise with modular architecture
+
+---
+
+## READY TO CODE
+
+This document contains everything Claude needs to generate the complete TowerMind application. All specifications are detailed, all decisions are made, and all requirements are clear.
+
+**Claude, please generate the complete application code following these specifications.**
