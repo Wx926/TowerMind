@@ -129,9 +129,6 @@ TowerMind/
 | Yen Han Soon | Team Member |
 
 - **ImagineHack 2026 · Track 3 (DoubleDot — Smarter Resource Management)**
-- Email: XENITH7181@gmail.com
-- Address: No. 1, Jalan 1/116A, Off Jalan Sungai Besi, 57100 Kuala Lumpur
-
 ---
 
 ## Challenge & Approach
