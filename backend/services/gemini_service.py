@@ -3,44 +3,68 @@ import re
 
 from config import Config
 
-PROMPT_TEMPLATE = """You are TowerMind AI, a building resource optimization expert.
 
-Building Data Context:
-- Total monthly energy cost: RM {total_cost}
+PROMPT_TEMPLATE = """
+You are TowerMind AI, a smart building optimisation expert.
+
+Building Context:
+- Total monthly utility cost: RM {total_cost}
 - Average occupancy: {occupancy}%
-- Current energy usage: {current_usage} kWh
-- Current carbon footprint: {carbon_footprint} tons CO2
+- Current electricity usage: {current_usage} kWh
+- Current carbon footprint: {carbon_footprint} kg CO₂e
 - Number of floors: {floors}
 - Peak hours: {peak_hours}
 
-User Query: "{user_query}"
+User Query:
+"{user_query}"
 
-Generate 3 optimization scenarios. For each scenario, provide:
-1. Scenario name (short, descriptive)
-2. Action description (specific, actionable steps)
-3. Estimated savings in RM
+Generate 3 optimisation scenarios.
+
+For each scenario provide:
+1. Name
+2. Description
+3. Estimated savings (RM)
 4. Carbon reduction percentage
-5. Effort level (Low/Medium/High)
+5. Effort level (Low, Medium, High)
 6. Comfort score (0-100)
-7. Implementation timeline (days)
-8. Primary risk factor
+7. Timeline
+8. Risk
 
-Format your response as JSON only, with this exact shape:
+Return JSON ONLY using this structure:
+
 {{
-    "scenario_a": {{
-        "name": "Climate Shift",
-        "description": "Increase AC temperature setpoint by 2C across all floors",
-        "savings": 3200,
-        "carbon_reduction": 8,
-        "effort": "Low",
-        "comfort_score": 65,
-        "timeline": "2 days",
-        "risk": "Occupant comfort complaints"
-    }},
-    "scenario_b": {{...}},
-    "scenario_c": {{...}},
-    "recommended": "scenario_c",
-    "analysis": "Brief explanation of why this scenario is recommended"
+  "scenario_a": {{
+    "name": "",
+    "description": "",
+    "savings": 0,
+    "carbon_reduction": 0,
+    "effort": "",
+    "comfort_score": 0,
+    "timeline": "",
+    "risk": ""
+  }},
+  "scenario_b": {{
+    "name": "",
+    "description": "",
+    "savings": 0,
+    "carbon_reduction": 0,
+    "effort": "",
+    "comfort_score": 0,
+    "timeline": "",
+    "risk": ""
+  }},
+  "scenario_c": {{
+    "name": "",
+    "description": "",
+    "savings": 0,
+    "carbon_reduction": 0,
+    "effort": "",
+    "comfort_score": 0,
+    "timeline": "",
+    "risk": ""
+  }},
+  "recommended": "scenario_a",
+  "analysis": ""
 }}
 """
 
@@ -50,32 +74,174 @@ class GeminiUnavailableError(Exception):
 
 
 def is_configured():
-    return bool(Config.GEMINI_API_KEY)
+    return bool(
+        getattr(
+            Config,
+            "GEMINI_API_KEY",
+            None,
+        )
+    )
 
 
 def _extract_json(text):
-    match = re.search(r"\{.*\}", text, re.DOTALL)
+
+    match = re.search(
+        r"\{.*\}",
+        text,
+        re.DOTALL,
+    )
+
     if not match:
-        raise GeminiUnavailableError("No JSON object found in Gemini response")
-    return json.loads(match.group(0))
+        raise GeminiUnavailableError(
+            "No JSON found in Gemini response"
+        )
+
+    return json.loads(
+        match.group(0)
+    )
 
 
-def generate_scenarios(user_query, building_context):
+def _validate_result(result, context):
+
+    max_savings = (
+        float(
+            context.get(
+                "total_cost",
+                10000,
+            )
+        )
+        * 0.30
+    )
+
+    for scenario in [
+        "scenario_a",
+        "scenario_b",
+        "scenario_c",
+    ]:
+
+        if scenario not in result:
+            continue
+
+        item = result[scenario]
+
+        item["savings"] = min(
+            float(
+                item.get(
+                    "savings",
+                    0,
+                )
+            ),
+            max_savings,
+        )
+
+        item["carbon_reduction"] = max(
+            0,
+            min(
+                float(
+                    item.get(
+                        "carbon_reduction",
+                        0,
+                    )
+                ),
+                100,
+            ),
+        )
+
+        item["comfort_score"] = max(
+            0,
+            min(
+                float(
+                    item.get(
+                        "comfort_score",
+                        0,
+                    )
+                ),
+                100,
+            ),
+        )
+
+    return result
+
+
+def generate_scenarios(
+    user_query,
+    building_context,
+):
+
     if not is_configured():
-        raise GeminiUnavailableError("GEMINI_API_KEY is not configured")
+        raise GeminiUnavailableError(
+            "Gemini API key not configured"
+        )
 
     try:
         import google.generativeai as genai
+
     except ImportError as e:
-        raise GeminiUnavailableError("google-generativeai package not installed") from e
 
-    genai.configure(api_key=Config.GEMINI_API_KEY)
-    model = genai.GenerativeModel(Config.GEMINI_MODEL)
+        raise GeminiUnavailableError(
+            "google-generativeai package not installed"
+        ) from e
 
-    prompt = PROMPT_TEMPLATE.format(user_query=user_query, **building_context)
+    print("=" * 60)
+    print("GEMINI DEBUG")
+    print("=" * 60)
+    print(
+        "Gemini Key Loaded:",
+        bool(Config.GEMINI_API_KEY)
+    )
+    print(
+        "Gemini Model:",
+        Config.GEMINI_MODEL
+    )
+
+    genai.configure(
+        api_key=Config.GEMINI_API_KEY
+    )
+
+    model = genai.GenerativeModel(
+        Config.GEMINI_MODEL
+    )
+
+    prompt = PROMPT_TEMPLATE.format(
+        user_query=user_query,
+        **building_context,
+    )
 
     try:
-        response = model.generate_content(prompt)
-        return _extract_json(response.text)
+
+        print("=" * 60)
+        print("SENDING REQUEST TO GEMINI")
+        print("=" * 60)
+
+        response = model.generate_content(
+            prompt
+        )
+
+        print("=" * 60)
+        print("GEMINI RESPONSE RECEIVED")
+        print("=" * 60)
+
+        print(response.text)
+
+        result = _extract_json(
+            response.text
+        )
+
+        result = _validate_result(
+            result,
+            building_context,
+        )
+
+        return result
+
     except Exception as e:
-        raise GeminiUnavailableError(str(e)) from e
+
+        print("=" * 60)
+        print("GEMINI ERROR")
+        print("=" * 60)
+        print(type(e))
+        print(str(e))
+
+        raise GeminiUnavailableError(
+            str(e)
+        ) from e

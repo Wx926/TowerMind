@@ -14,3 +14,12 @@ def next_month():
 def trend():
     days = int(request.args.get("days", 30))
     return jsonify(get_forecast_trend(days))
+
+@forecast_bp.route("", methods=["GET"])
+def forecast_home():
+    return jsonify({
+        "available_routes": [
+            "/api/forecast/next-month",
+            "/api/forecast/trend"
+        ]
+    })

@@ -43,7 +43,7 @@ def implement_recommendation(rec_id):
     return jsonify(rec.to_dict())
 
 
-@recommendations_bp.route("/generate", methods=["POST"])
+@recommendations_bp.route("/generate", methods=["GET"])
 def generate():
     created = generate_recommendations()
     return jsonify([r.to_dict() for r in created])

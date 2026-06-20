@@ -30,6 +30,14 @@ def create_app():
     app.register_blueprint(simulation_bp, url_prefix="/api/simulation")
     app.register_blueprint(scheduler_bp, url_prefix="/api/scheduler")
 
+    @app.route("/")
+    def home():
+        return jsonify({
+            "service": "TowerMind API",
+            "status": "running",
+            "version": "1.0"
+        })
+    
     @app.route("/api/health")
     def health():
         return jsonify({"status": "ok", "service": "TowerMind API"})
