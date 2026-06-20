@@ -1,32 +1,146 @@
-# TowerMind
+# TowerMind — Autonomous Sustainability Building AI
 
-AI-powered smart resource management system for office buildings — monitors, predicts, and optimizes electricity, water, space, and manpower usage.
+> *"Every kilowatt, every drop of water, used where it matters most."*
 
-*"Every kilowatt, every drop of water, used where it matters most"*
+TowerMind is a full-stack AI system that monitors, predicts, and optimises a smart office building's energy, water, occupancy, carbon emissions, and cost — all in real time.
 
-## Stack
-- Backend: Python Flask + SQLite
-- Frontend: Vanilla HTML/CSS/JS + ECharts
-- AI: Google Gemini API (with rule-based fallback when no API key is set)
+Built for **ImagineHack 2026 · Track 3** by **XENITH**.
+
+---
+
+## Live Pages
+
+| Page | URL | Description |
+|---|---|---|
+| Main Landing (wx version) | `http://localhost:5500/index.html` | Full page with Floor Plan, Volt Buddy, Simulator |
+| Dashboard (Flask served) | `http://localhost:5000/` | Original dashboard with backend status dot |
+
+---
 
 ## Features
-1. Unified Resource Monitoring Dashboard
-2. Sustainability KPI & Executive Dashboard
-3. AI Predictive Forecasting
-4. Smart Root-Cause Anomaly Detection
-5. Strategic Recommendation Engine
-6. Cross-Resource AI Scheduler
-7. AI Sustainability Advisor & Digital Twin Simulator
 
-## Getting started
-See [SETUP.md](SETUP.md) for full setup instructions.
+### 1. Real-Time Resource Dashboard
+Live KPI cards for **Energy (kWh)**, **Water (L)**, **Occupancy (%)**, **Carbon (kg CO₂e)**, and **Monthly Cost (RM)** — all fetched from the backend on load.
 
-Quick start (after setup):
-```bash
-# Terminal 1
-cd backend && venv\Scripts\activate && python app.py
+### 2. Volt Buddy — AI Efficiency Mascot
+Animated mascot showing the building's current efficiency score. Switch between **Current**, **3 Months**, and **1 Year** views — each fetches real historical KPI averages from the API.
 
-# Terminal 2
-cd frontend && python -m http.server 5173
+### 3. Interactive Floor Plan
+8-floor building map with clickable zone hotspots. Each floor card badge (**Normal / Warning / Overload**) is derived from the worst zone on that floor. Clicking a zone shows live energy, water, occupancy, cost, and an AI recommendation.
+
+### 4. AI Forecast & Driver Analysis
+Predicts next month's energy bill, expected kWh demand, and budget risk. Includes a 30-day confidence band chart showing weekly demand cycles.
+
+### 5. Anomalies & Optimization Recommendations
+Deduped anomaly cards (by floor + type) with **Acknowledge** action. Up to 3 high-impact recommendation cards with **Implement** action. Both fade out on action.
+
+### 6. Space Consolidation Scheduler
+Calls the `/api/scheduler/consolidation` and `/api/scheduler/logistics` endpoints to surface underused floors and logistics savings — displayed as insight cards in the alerts section.
+
+### 7. AI Sustainability Simulation Engine
+Smart question-type detection routes queries to the right handler:
+- **Strategy questions** → Gemini AI (or Digital Twin fallback) generates Scenarios A/B/C with savings, carbon reduction, effort, comfort score, and timeline
+- **Forecast questions** → Pulls real `/api/forecast/next-month` data and shows a direct RM answer
+- **Summary questions** → Pulls live resource summary (kWh, L, occupancy, carbon, cost)
+- **Invalid queries** → Shows a helpful prompt instead of generating fake scenarios
+
+Risk Assessment labels adapt to the question topic (HVAC, water, carbon, renewable, occupancy, energy).
+
+### 8. Smart Building Intelligence Features
+Static feature showcase with background image, resource monitoring, AI forecasting, anomaly detection, and simulation engine descriptions.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | Python 3.12 · Flask · SQLAlchemy · SQLite |
+| AI | Google Gemini API (with rule-based Digital Twin fallback) |
+| Frontend | Vanilla HTML · CSS · JavaScript (no framework) |
+| Charts | Apache ECharts 5 |
+| CORS | flask-cors |
+
+---
+
+## Project Structure
+
 ```
-Then open `http://127.0.0.1:5173/index.html`.
+TowerMind/
+├── backend/
+│   ├── app.py                 # Flask entry point
+│   ├── config.py              # CORS, DB, port config
+│   ├── models.py              # SQLAlchemy models
+│   ├── routes/                # API blueprints
+│   │   ├── resources.py       # /api/resources/*
+│   │   ├── kpi.py             # /api/kpi/*
+│   │   ├── forecast.py        # /api/forecast/*
+│   │   ├── anomalies.py       # /api/anomalies/*
+│   │   ├── recommendations.py # /api/recommendations/*
+│   │   ├── simulation.py      # /api/simulation/*
+│   │   └── scheduler.py       # /api/scheduler/*
+│   ├── services/              # Business logic
+│   │   ├── simulation_engine.py
+│   │   └── scheduler_engine.py
+│   └── data/
+│       └── init_db.py         # Seeds 30 days of mock data
+├── frontend/                  # Flask-served dashboard (port 5000)
+│   ├── index.html
+│   ├── css/style.css
+│   └── js/main.js
+├── css/style.css              # Root page styles
+├── js/
+│   ├── main.js                # Root page — all API calls + simulator
+│   ├── floorplan.js           # Floor plan interactive map
+│   └── voltbuddy.js           # Volt Buddy mascot
+├── index.html                 # Root landing page (port 5500)
+└── assets/                    # Images, floor plan PNGs
+```
+
+---
+
+## Key API Endpoints
+
+| Method | Endpoint | Returns |
+|---|---|---|
+| GET | `/api/resources/summary` | Today's electricity + water (value, trend_pct, cost) |
+| GET | `/api/resources/trend?days=7&resource_type=electricity` | 7-day daily kWh array |
+| GET | `/api/resources/by-floor?resource_type=electricity` | Per-floor energy (last 24h) |
+| GET | `/api/kpi/current` | Latest efficiency_score, occupancy, carbon, cost_reduction |
+| GET | `/api/kpi/history?months=3` | Monthly KPI history array |
+| GET | `/api/forecast/next-month` | Projected cost, growth %, drivers, budget risk |
+| GET | `/api/forecast/trend?days=30` | 30-day forecast with high/low confidence band |
+| GET | `/api/anomalies?limit=50&status=pending` | Active anomaly list |
+| GET | `/api/recommendations?limit=3` | Top recommendations with savings + carbon impact |
+| POST | `/api/simulation/generate` | Gemini AI scenario generation |
+| POST | `/api/simulation/fallback` | Digital Twin rule-based scenarios |
+| GET | `/api/scheduler/consolidation` | Underused floors + consolidation savings |
+| GET | `/api/scheduler/logistics` | Logistics optimisation + delivery savings |
+
+---
+
+## Team — XENITH
+
+- **ImagineHack 2026 · Track 3**
+- Email: XENITH7181@gmail.com
+- Address: No. 1, Jalan 1/116A, Off Jalan Sungai Besi, 57100 Kuala Lumpur
+
+---
+
+## Quick Start
+
+See [SETUP.md](SETUP.md) for full instructions.
+
+```bash
+# 1. Start backend
+cd backend
+venv\Scripts\activate        # Windows
+python app.py                # Runs at http://localhost:5000
+
+# 2. Open frontend
+# Option A — Flask built-in (port 5000):
+open http://localhost:5000
+
+# Option B — VS Code Live Server (port 5500):
+# Right-click index.html → Open with Live Server
+```
