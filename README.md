@@ -129,6 +129,7 @@ TowerMind/
 | Yen Han Soon | Team Member |
 
 - **ImagineHack 2026 · Track 3 (DoubleDot — Smarter Resource Management)**
+
 ---
 
 ## Challenge & Approach
