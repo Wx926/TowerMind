@@ -213,9 +213,13 @@ def generate_scenarios(
         print("SENDING REQUEST TO GEMINI")
         print("=" * 60)
 
-        response = model.generate_content(
-            prompt
-        )
+        import concurrent.futures
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(model.generate_content, prompt)
+            try:
+                response = future.result(timeout=7)
+            except concurrent.futures.TimeoutError:
+                raise GeminiUnavailableError("Gemini API timed out after 7s")
 
         print("=" * 60)
         print("GEMINI RESPONSE RECEIVED")

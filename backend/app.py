@@ -1,8 +1,11 @@
-from flask import Flask, jsonify
+import os
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 
 from config import Config
 from models import db
+
+FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'frontend')
 
 
 def create_app():
@@ -32,12 +35,15 @@ def create_app():
 
     @app.route("/")
     def home():
-        return jsonify({
-            "service": "TowerMind API",
-            "status": "running",
-            "version": "1.0"
-        })
-    
+        return send_from_directory(FRONTEND_DIR, "index.html")
+
+    @app.route("/<path:path>")
+    def serve_static(path):
+        full = os.path.join(FRONTEND_DIR, path)
+        if os.path.isfile(full):
+            return send_from_directory(FRONTEND_DIR, path)
+        return send_from_directory(FRONTEND_DIR, "index.html")
+
     @app.route("/api/health")
     def health():
         return jsonify({"status": "ok", "service": "TowerMind API"})
@@ -57,3 +63,4 @@ app = create_app()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=Config.FLASK_PORT, debug=True)
+
