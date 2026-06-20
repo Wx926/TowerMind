@@ -115,10 +115,16 @@ const fpFloors = [
   }
 
   fpFloors.forEach((f, i) => {
+    // Derive badge from worst zone in this floor so card always matches detail panel
+    const hasOverload = f.zones.some(z => z[1] === 'danger');
+    const hasWarning  = f.zones.some(z => z[1] === 'warning');
+    const status = hasOverload ? 'danger'   : hasWarning ? 'warning' : 'normal';
+    const text   = hasOverload ? 'Overload' : hasWarning ? 'Warning' : 'Normal';
+
     const card = document.createElement("button");
     card.type = "button";
     card.className = "fp-floor-card";
-    card.innerHTML = `<h3>${f.n}${fpSuffix(f.n)} Floor</h3><p>${f.name}</p><span class="fp-status ${f.status}">${f.text}</span>`;
+    card.innerHTML = `<h3>${f.n}${fpSuffix(f.n)} Floor</h3><p>${f.name}</p><span class="fp-status ${status}">${text}</span>`;
     card.onclick = () => fpHandleCardClick(i, card);
     grid.appendChild(card);
   });
