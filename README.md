@@ -121,9 +121,41 @@ TowerMind/
 
 ## Team — XENITH
 
-- **ImagineHack 2026 · Track 3**
+| Name | Role |
+|---|---|
+| Tan Jia Min | Team Member |
+| Ngoh Jia Ying | Team Member |
+| Koo Wee Xuan | Team Member |
+| Yen Han Soon | Team Member |
+
+- **ImagineHack 2026 · Track 3 (DoubleDot — Smarter Resource Management)**
 - Email: XENITH7181@gmail.com
 - Address: No. 1, Jalan 1/116A, Off Jalan Sungai Besi, 57100 Kuala Lumpur
+
+---
+
+## Challenge & Approach
+
+**Challenge:** Businesses and communities struggle with inefficient use of electricity, water, and building space — leading to unnecessary waste and rising operating costs.
+
+**Approach:** TowerMind addresses this with a full-stack AI web application that:
+1. **Monitors** real-time resource usage (electricity, water, occupancy, carbon, cost) across 8 building floors
+2. **Forecasts** next month's energy bill using historical trends and AI driver analysis
+3. **Detects** anomalies (energy spikes, water leaks, after-hours activity) and recommends corrective actions
+4. **Simulates** sustainability strategies via Google Gemini AI before implementation — giving teams confidence in their decisions before spending money
+
+The system uses a Python Flask backend with a SQLite database seeded with 30 days of realistic building data, served to a fully custom vanilla JS + CSS frontend with no UI frameworks.
+
+---
+
+## AI Tools Used
+
+As required by ImagineHack 2026 rules, all AI tool usage is disclosed below:
+
+| AI Tool | Usage |
+|---|---|
+| **Google Gemini API** | Powers the AI Sustainability Simulation Engine (`/api/simulation/generate`) — generates three strategy scenarios (A/B/C) with savings, carbon reduction, effort score, and implementation timeline |
+| **Claude (Anthropic)** | Code assistance for frontend JavaScript logic (simulator routing, floor plan hotspot system, Volt Buddy mascot animation), CSS layout, and README/SETUP documentation |
 
 ---
 
