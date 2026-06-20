@@ -77,11 +77,11 @@
         <p>Monitor electricity, water, occupancy, carbon emissions and cost in one smart view.</p>
       </div>
       <div class="kpi-grid">
-        <div class="kpi-card"><span>Energy Usage</span><h3>1,250 kWh</h3><p class="positive">↓ 8% from yesterday</p></div>
-        <div class="kpi-card"><span>Water Usage</span><h3>4,500 L</h3><p class="positive">↓ 5% this week</p></div>
-        <div class="kpi-card"><span>Occupancy</span><h3>72%</h3><p class="warning">Peak usage detected</p></div>
-        <div class="kpi-card"><span>Carbon Emission</span><h3>890 kg</h3><p class="positive">↓ 12% this month</p></div>
-        <div class="kpi-card dark"><span>Monthly Cost</span><h3>RM35k</h3><p>RM7.5k savings possible</p></div>
+        <div class="kpi-card"><span>Energy Usage</span><h3>—</h3><p>Loading…</p></div>
+        <div class="kpi-card"><span>Water Usage</span><h3>—</h3><p>Loading…</p></div>
+        <div class="kpi-card"><span>Occupancy</span><h3>—</h3><p>Loading…</p></div>
+        <div class="kpi-card"><span>Carbon Emission</span><h3>—</h3><p>Loading…</p></div>
+        <div class="kpi-card dark"><span>Monthly Cost</span><h3>—</h3><p>Loading…</p></div>
       </div>
       <div class="dashboard-grid">
         <div class="chart-card large">
@@ -140,9 +140,9 @@
     <div class="container">
       <div class="section-heading"><span>Predictive Intelligence</span><h2>AI Forecast & Driver Analysis</h2></div>
       <div class="forecast-grid">
-        <div class="forecast-card dark-card"><span>Next Month Projection</span><h3>RM39,200</h3><p>+12% predicted increase due to higher occupancy and HVAC runtime.</p></div>
-        <div class="forecast-card"><span>Expected Energy</span><h3>38,900 kWh</h3><p>Higher demand expected during evening meeting hours.</p></div>
-        <div class="forecast-card"><span>Budget Risk</span><h3>High</h3><p>Likely to exceed RM38,000 monthly budget.</p></div>
+        <div class="forecast-card dark-card"><span>Next Month Projection</span><h3>—</h3><p>Loading forecast…</p></div>
+        <div class="forecast-card"><span>Expected Energy</span><h3>—</h3><p>Loading forecast…</p></div>
+        <div class="forecast-card"><span>Budget Risk</span><h3>—</h3><p>Loading forecast…</p></div>
       </div>
       <div class="chart-card">
         <div class="card-title"><h3>30-Day Forecast Trend</h3><span>Confidence Band</span></div>
@@ -154,11 +154,7 @@
   <section id="alerts" class="section features-section">
     <div class="container">
       <div class="section-heading-small-title"><span>AI Insights</span><h2>Anomalies & Optimization Recommendations</h2></div>
-      <div class="insight-grid">
-        <div class="insight-card"><div class="alert-badge danger">Critical</div><h3>Level 18 Energy Spike</h3><p>250% above normal at 2:00 AM. Possible AC or lighting left on.</p><button>Dispatch Team</button></div>
-        <div class="insight-card"><div class="alert-badge warning">Medium</div><h3>Level 10 Water Surge</h3><p>Water usage increased by 42%. Possible leak near pantry area.</p><button>Schedule Check</button></div>
-        <div class="insight-card"><div class="alert-badge success">High Impact</div><h3>Consolidate Low-Occupancy Floors</h3><p>Move after-hours meetings to Level 7. Estimated savings: RM4,700/month.</p><button>Implement</button></div>
-      </div>
+      <div class="insight-grid"></div>
     </div>
   </section>
 
@@ -170,11 +166,7 @@
           <input id="simulationInput" type="text" value="How can we reduce energy costs by 15%?" />
           <button onclick="runSimulation()">Simulate</button>
         </div>
-        <div class="scenario-grid" id="scenarioGrid">
-          <div class="scenario-card"><span>Scenario A</span><h3>AC Temperature Adjustment</h3><p>Increase AC temperature by 2°C during peak hours.</p><ul><li>Savings: <strong>RM3,200/month</strong></li><li>Carbon Reduction: <strong>8%</strong></li><li>Effort: <strong>Low</strong></li><li>Comfort Score: <strong>86%</strong></li></ul></div>
-          <div class="scenario-card"><span>Scenario B</span><h3>Floor Consolidation</h3><p>Close low-occupancy floors after 6 PM and move meetings to active zones.</p><ul><li>Savings: <strong>RM4,700/month</strong></li><li>Carbon Reduction: <strong>12%</strong></li><li>Effort: <strong>Medium</strong></li><li>Comfort Score: <strong>82%</strong></li></ul></div>
-          <div class="scenario-card recommended"><span>Scenario C</span><h3>Combined Strategy</h3><p>AC +2°C, floor consolidation and after-hours lighting reduction.</p><ul><li>Savings: <strong>RM7,500/month</strong></li><li>Carbon Reduction: <strong>18%</strong></li><li>Effort: <strong>Medium</strong></li><li>Comfort Score: <strong>84%</strong></li></ul></div>
-        </div>
+        <div class="scenario-grid" id="scenarioGrid"></div>
         <div class="risk-box">
           <h3>Risk Assessment</h3>
           <div class="risk-grid">
