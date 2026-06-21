@@ -85,7 +85,6 @@ TowerMind/
 │   └── data/
 │       └── init_db.py         # Seeds 30 days of mock data
 ├── frontend/                  # Flask-served dashboard (port 5000)
-│   ├── index.html
 │   ├── css/style.css
 │   └── js/main.js
 ├── css/style.css              # Root page styles
